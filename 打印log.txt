@@ -1,0 +1,40 @@
+1、该脚本打印了包含崩溃，异常，dalvikvm信息，严格模式和网页CONSOLE等信息， DebugInfo.sh
+#!/bin/sh 
+#Explanations:
+# System.err to grep stacktrace information of catched exceptions
+#AndroidRuntime to grep stacktrace information of uncaughted runtime exceptions
+#MessageQueue to grep exceptions happended during MessageQueue
+#CONSOLE to grep console message releated with javascript console.info
+#dalvikvm informations about dalvik vm 
+#StrictMode information about StrictMode warnings
+adb logcat |grep --color=always -E "System.err|AndroidRuntime|MessageQueue|CONSOLE|W/Bundle|dalvikvm|StrictMode"
+
+2、打印某个应用的日志
+
+以下脚本为打印某个应用的日志，思路是将包名转为进程id，然后过滤进程id即可
+
+#!/usr/bin/env python
+#coding:utf-8
+#This script is aimed to grep logs by application(User should input a packageName and then we look up for the process ids then separate logs by process ids).
+
+import os
+import sys
+
+packageName=str(sys.argv[1])
+
+command = "adb shell ps | grep %s | awk '{print $2}'"%(packageName)
+p = os.popen(command)
+##for some applications,there are multiple processes,so we should get all the process id
+pid = p.readline().strip()
+filters = pid
+while(pid != ""):
+    pid = p.readline().strip()
+    if (pid != ''):
+        filters = filters +  "|" + pid
+        #print 'command = %s;filters=%s'%(command, filters)
+if (filters != '') :
+    cmd = 'adb logcat | grep --color=always -E "%s" '%(filters)
+    os.system(cmd)
+
+使用实例：
+logcatPkg.py com.example.tester

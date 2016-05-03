@@ -1,0 +1,9 @@
+1、GsonFormat
+
+2、.ignore
+
+3、ADB Idea
+
+4、Eclipse Code Formatter
+
+5、FindBugs-IDEA

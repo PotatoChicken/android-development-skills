@@ -1,0 +1,14 @@
+note: 修改数据库权限，从而pull 数据库
+
+adb shell "run-as package.name chmod 666 /data/data/package.name/databases/file"
+adb pull /data/data/package.name/databases/file .
+adb shell "run-as package.name chmod 600 /data/data/package.name/databases/file"
+
+
+UPDATE
+
+the command for Android 5.0+ to save /data/data/package.name/databases/file would be:
+
+adb exec-out run-as package.name cat databases/file > file
+
+adb shell "run-as com.tcl.mie.launcher.lite chmod 666 /data/data/com.tcl.mie.launcher.lite/databases/launcher.db"

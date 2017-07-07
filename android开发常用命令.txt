@@ -1,0 +1,65 @@
+一、 获取log
+  //保存到本地文件
+  adb logcat -v time -d >log_111.txt
+  
+  //显示log
+    1) 显示全部日志信息：adb logcat
+
+    (2) 显示某一TAG的日志信息：adb logcat -s TAG名称
+
+    (3) 显示某一TAG的某一级别的日志信息：adb logcat TAG名称:级别.....TAG名称：级别 *:S
+
+          注：日志级别（Ｖ-verbose,D-debug,I-info,W-warning,E-error,F-fatal,S-silent），＊:S（确保日志输出的时候是按照过滤器的说明限制）
+
+    (4) 显示某一级别以上的全部日志信息：adb logcat *:级别
+
+    (5) 以某种格式显示日志信息：adb logcat -v 格式
+
+          注：日志格式（brief,process,tag,thread,raw,time,long）
+
+    (6) 显示缓冲区中的日志信息：adb logcat -b 缓冲区类型
+
+          注：缓冲区类型（radio-无线缓冲区，events-事件缓冲区，main-主缓冲区，默认）
+
+    (7) 清理已经存在的日志：adb logcat -c
+
+    (8) 将日志显示在控制台后退出：adb logcat -d
+
+    (9) 将日志输出到文件：adb logcat -f 文件名
+
+二、monkey测试
+   adb shell monkey -p (包名)com.tcl.mie.launcher3 --pct-touch 55 --pct-motion 5 --pct-trackball 20 --pct-majornav 15 --pct-appswitch 5 -s %RANDOM% --throttle 400 --ignore-crashes --ignore-timeouts --ignore-security-exceptions --monitor-native-crashes -v 10000000
+
+ 停止：
+1. adb shell
+
+2. top | grep monkey
+
+显示如下：
+
+top | grep monkey
+ *****  0   1% S    10 262960K  10328K     root     com.android.commands.monkey
+
+3. kill -9 *****
+
+三、
+    adb remount
+
+四、
+    adb pull /data/anr //获取anr异常数据
+
+五、windows打印log的bat
+
+@echo off
+adb wait-for-device
+
+set datevar=%date:~0,4%%date:~5,2%%date:~8,2%
+::获取时间中的小时 将格式设置为：24小时制
+set timevar=%time:~0,2%
+if /i %timevar% LSS 10 (
+set timevar=0%time:~1,1%
+)
+::获取时间中的分、秒 将格式设置为：3220 ，表示 32分20秒
+set timevar=%timevar%%time:~3,2%%time:~6,2%
+set name=%datevar%%timevar%
+adb logcat -v time -d > log_%name%.txt
